@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 LABEL maintainer="JohnTheBoss"
 
-LABEL build_version="SiteDeploy with Node.js: 12x"
+LABEL build_version="SiteDeploy with Node.js: 12x and PHP 7.2x + Composer 1.9x"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
