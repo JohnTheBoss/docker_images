@@ -15,7 +15,7 @@ RUN \
     fonts-wqy-zenhei \
     fonts-thai-tlwg \
     fonts-kacst \
-    ttf-freefont > /dev/null && \
+    fonts-freefont-ttf > /dev/null && \
 	echo "**** DONE! ****"
 
 # Install Chrome Unstable #
