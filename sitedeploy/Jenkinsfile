@@ -1,0 +1,46 @@
+pipeline {
+    agent {label 'docker-agent'}
+    
+    environment {
+        IMAGE_NAME = 'johntheboss/sitedeploy'
+    }
+    
+    triggers {
+        // https://www.jenkins.io/doc/book/pipeline/syntax/#triggers
+        cron('@monthly')
+      }
+    stages {
+        stage('Build') {
+            steps {
+                git "https://github.com/JohnTheBoss/docker_images"
+                dir("sitedeploy"){
+                    sh "docker build --no-cache --build-arg BUILD_DATE='${BUILD_TIMESTAMP}' --build-arg NODE_VERSION=12 -t ${IMAGE_NAME}:build_${BUILD_NUMBER}_v12 ."
+                    sh "docker build --no-cache --build-arg BUILD_DATE='${BUILD_TIMESTAMP}' --build-arg NODE_VERSION=14 -t ${IMAGE_NAME}:build_${BUILD_NUMBER}_v14 ."
+                }
+            }
+        }
+        stage('Set Image Tag'){
+            steps {
+                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v12 ${IMAGE_NAME}:node12 ${IMAGE_NAME}:lts'
+                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v14 ${IMAGE_NAME}:node14 ${IMAGE_NAME}:latest'  
+            }
+        }
+        stage('Publish'){
+            steps{
+                withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
+                  sh 'docker push ${IMAGE_NAME}:latest'
+                  sh 'docker push ${IMAGE_NAME}:node14'
+                  sh 'docker push ${IMAGE_NAME}:lts'
+                  sh 'docker push ${IMAGE_NAME}:node12'
+                }
+            }
+        }
+        
+        stage('Clean'){
+            steps {
+                sh 'docker rmi ${IMAGE_NAME}:build_${BUILD_NUMBER}_v12 ${IMAGE_NAME}:node12 ${IMAGE_NAME}:lts'
+                sh 'docker rmi ${IMAGE_NAME}:build_${BUILD_NUMBER}_v14 ${IMAGE_NAME}:node14 ${IMAGE_NAME}:latest'
+            }
+        }
+    }
+}
