@@ -1,0 +1,40 @@
+pipeline {
+    agent {label 'docker-agent'}
+    
+    environment {
+        IMAGE_NAME = 'johntheboss/sitedeploy_np'
+    }
+    
+    triggers {
+        // https://www.jenkins.io/doc/book/pipeline/syntax/#triggers
+        cron('@monthly')
+      }
+    stages {
+        stage('Build') {
+            steps {
+                git "https://github.com/JohnTheBoss/docker_images"
+                dir("sitedeploy_node_php"){
+                    sh "docker build --no-cache --build-arg BUILD_DATE='${BUILD_TIMESTAMP}' -t ${IMAGE_NAME}:build_${BUILD_NUMBER} ."
+                }
+            }
+        }
+        stage('Set Image Tag'){
+            steps {
+                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER} ${IMAGE_NAME}:latest'   
+            }
+        }
+        stage('Publish'){
+            steps{
+                withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
+                  sh 'docker push ${IMAGE_NAME}:latest'
+                }
+            }
+        }
+        
+        stage('Clean'){
+            steps {
+                sh 'docker rmi ${IMAGE_NAME}:build_${BUILD_NUMBER} ${IMAGE_NAME}:latest'
+            }
+        }
+    }
+}

@@ -1,7 +1,9 @@
-FROM ubuntu:18.04
-LABEL maintainer="JohnTheBoss"
+FROM ubuntu:20.04
+ARG  BUILD_DATE
 
-LABEL build_version="SiteDeploy with Node.js: 12x and PHP 7.2x + Composer 1.9x"
+LABEL maintainer="JohnTheBoss"
+LABEL sourceCode="https://github.com/JohnTheBoss/docker_images/sitedeploy_node_php"
+LABEL version="SiteDeploy with Node.js: 12x and PHP 7.2x + Composer 1.9x | Build Date: ${BUILD_DATE}"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
