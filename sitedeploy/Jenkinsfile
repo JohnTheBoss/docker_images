@@ -21,8 +21,10 @@ pipeline {
         }
         stage('Set Image Tag'){
             steps {
-                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v12 ${IMAGE_NAME}:node12 ${IMAGE_NAME}:lts'
-                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v14 ${IMAGE_NAME}:node14 ${IMAGE_NAME}:latest'  
+                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v12 ${IMAGE_NAME}:node12'
+                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v12 ${IMAGE_NAME}:lts'
+                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v14 ${IMAGE_NAME}:node14'
+                sh 'docker tag ${IMAGE_NAME}:build_${BUILD_NUMBER}_v14 ${IMAGE_NAME}:latest'  
             }
         }
         stage('Publish'){
