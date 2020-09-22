@@ -6,6 +6,8 @@ LABEL maintainer="JohnTheBoss"
 LABEL sourceCode="https://github.com/JohnTheBoss/docker_images/sitedeploy"
 LABEL build_version="SiteDeploy with Node.js: ${NODE_VERSION}x | Build Date: ${BUILD_DATE}"
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Update System #
 RUN \
     echo "**** update system ****" && \
