@@ -3,7 +3,7 @@ ARG  BUILD_DATE
 
 LABEL maintainer="JohnTheBoss"
 LABEL sourceCode="https://github.com/JohnTheBoss/docker_images/sitedeploy_node_php"
-LABEL version="SiteDeploy with Node.js: 12x and PHP 7.2x + Composer 1.9x | Build Date: ${BUILD_DATE}"
+LABEL version="SiteDeploy with Node.js: 12x and PHP 7.4x + Composer 1.9x | Build Date: ${BUILD_DATE}"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -36,7 +36,7 @@ RUN \
 RUN ln -fs /usr/share/zoneinfo/Europe/London /etc/localtime && \
     apt-get update && \
     apt-get -y install tzdata && \
-    apt install php php7.2-cgi -y && \
+    apt install php php7.4-cgi -y && \
     php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php && \
     mv composer.phar /usr/local/bin/composer && \
